@@ -25,8 +25,9 @@ io.on('connection', (socket) => {
 
   socket.broadcast.emit('newMessage', generateMessage('SocketBot', `User has joined the chatroom`));
 
-  socket.on('createMessage', ({owner, text}) => {
+  socket.on('createMessage', ({owner, text}, callback) => {
     io.emit('newMessage', generateMessage(owner, text));
+    callback('This is from server');
   });
 
 });

@@ -3,14 +3,49 @@
   <head>
     <title>Socket Chat</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/style.css" rel="stylesheet">
-  </head>
+      <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
   <body>
-    <h1>Socket Chat</h1>
+
+    <div class="container">
+      <h1 class="center-align">Socket Chat</h1>
+
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection" id="messages">
+            
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <form id="message-form" class="col s12">
+          <div class="row valign-wrapper">
+
+            <div class="input-field col s8">
+              <label for="message">Message</label>
+              <textarea class="materialize-textarea" name="message" placeholder="message"></textarea>
+            </div>
+
+            <div class="col s4">
+              <button class="right btn waves-effect waves-light">Send Message <i class="material-icons right">send</i></button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
 
     <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
     <script src="/js/index.js"></script>
   </body>
 
