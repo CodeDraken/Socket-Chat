@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "start": "node server/server.js",
+    "start-watch": "nodemon server/server.js"
+  },
+  "name": "socket-chat",
+  "version": "1.0.0",
+  "description": "A chat app with Socket io",
+  "main": "index.js",
+  "repository": "https://github.com/CodeDraken/Socket-Chat",
+  "author": "CodeDraken",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
