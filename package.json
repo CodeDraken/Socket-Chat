@@ -3,6 +3,9 @@
     "start": "node server/server.js",
     "start-watch": "nodemon server/server.js"
   },
+  "engines": {
+    "node": "6.10.2"
+  },
   "name": "socket-chat",
   "version": "1.0.0",
   "description": "A chat app with Socket io",
