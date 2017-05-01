@@ -8,13 +8,13 @@ socket.on('disconnect', function () {
   console.log('Disconnected from server');
 });
 
-socket.on('newMessage', function (message) {
-  console.log(`${message.createdAt} ${message.from}: ${message.text}`);
+socket.on('newMessage', function ({owner, text, createdAt}) {
+  console.log(`${createdAt} ${owner}: ${text}`);
 });
 
-function send(from, text) {
+function send(owner, text) {
   socket.emit('createMessage', {
-    from,
+    owner,
     text
   });
 }

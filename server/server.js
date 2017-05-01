@@ -20,12 +20,29 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 
-  socket.on('createMessage', (message) => {
+  socket.emit('newMessage', {
+    owner: 'SocketBot',
+    text: `Welcome to the chatroom!`,
+    createdAt: new Date().getTime()
+  });
+
+  socket.broadcast.emit('newMessage', {
+    owner: 'SocketBot',
+    text: `User has joined the chatroom`,
+    createdAt: new Date().getTime()
+  });
+
+  socket.on('createMessage', ({owner, text}) => {
     io.emit('newMessage', {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date().toTimeString()
+      owner,
+      text,
+      createdAt: new Date().getTime()
     });
+    // socket.broadcast.emit('newMessage', {
+    //   from,
+    //   text,
+    //   createdAt: new Date().toTimeString()
+    // });
   });
 
 });
