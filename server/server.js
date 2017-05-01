@@ -7,6 +7,7 @@ const publicPath = path.join(__dirname, '../public');
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
+const {generateMessage} = require('./utils/message');
 
 const port = process.env.PORT || 3000;
 
@@ -20,29 +21,12 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 
-  socket.emit('newMessage', {
-    owner: 'SocketBot',
-    text: `Welcome to the chatroom!`,
-    createdAt: new Date().getTime()
-  });
+  socket.emit('newMessage', generateMessage('SocketBot', `Welcome to the chat app user`));
 
-  socket.broadcast.emit('newMessage', {
-    owner: 'SocketBot',
-    text: `User has joined the chatroom`,
-    createdAt: new Date().getTime()
-  });
+  socket.broadcast.emit('newMessage', generateMessage('SocketBot', `User has joined the chatroom`));
 
   socket.on('createMessage', ({owner, text}) => {
-    io.emit('newMessage', {
-      owner,
-      text,
-      createdAt: new Date().getTime()
-    });
-    // socket.broadcast.emit('newMessage', {
-    //   from,
-    //   text,
-    //   createdAt: new Date().toTimeString()
-    // });
+    io.emit('newMessage', generateMessage(owner, text));
   });
 
 });

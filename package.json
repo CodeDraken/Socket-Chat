@@ -1,7 +1,9 @@
 {
   "scripts": {
     "start": "node server/server.js",
-    "start-watch": "nodemon server/server.js"
+    "start-watch": "nodemon server/server.js",
+    "test": "mocha server/**/*.test.js",
+    "test-watch": "nodemon yarn test"
   },
   "engines": {
     "node": "6.10.2"
@@ -16,5 +18,10 @@
   "dependencies": {
     "express": "^4.15.2",
     "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.3.0",
+    "nodemon": "^1.11.0"
   }
 }
