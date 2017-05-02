@@ -9,39 +9,45 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function ({owner, text, createdAt}) {
-  var li = $('<li class="collection-item message"></li>');
-  var timestamp = '<span class="secondary-content message-date">' + createdAt + '</span>';
-  li.html('<span>' + owner + ': </span>' + '<span>' + text + '</span>' + timestamp);
-
+  var date = (new Date(createdAt)).toLocaleTimeString();
+  var li = $('<li class="collection-item chat__message"></li>');
+  var timestamp = '<span class="secondary-content message__date">' + date + '</span>';
+  var ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
+  var message = '<p>' + text + '</p>';
+  
+  li.append(ownerAndStamp).append(message);
   $('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function ({owner, url, createdAt}) {
-  var li = $('<li class="collection-item message"></li>');
+  var date = (new Date(createdAt)).toLocaleTimeString();
+  var li = $('<li class="collection-item chat__message"></li>');
+  var timestamp = '<span class="secondary-content message__date">' + date + '</span>';
+  var ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
   var a = $('<a target="_blank">My current location</a>');
 
-  li.text(`${owner}: `);
   a.attr('href', url);
-  li.append(a);
+  li.append(ownerAndStamp).append(a);
   $('#messages').append(li);
 });
 
 function sendMessage(owner, text) {
-  socket.emit('createMessage', {owner, text}, function(msg) {
-    console.log('Got it', msg);
+  socket.emit('createMessage', {owner, text}, function() {
   });
 }
 
 // jQuery things
 $(document).ready(function() {
 
-  $('#message-form').on('submit', function (e) {
+  var startSendMessage = function (e) {
     e.preventDefault();
     const msgInput = $('[name=message]');
 
     sendMessage('User', msgInput.val());
     msgInput[0].value = '';
-  });
+  };
+
+  $('#message-form').on('submit', startSendMessage);
 
   var locationButton = $('#send-location');
   locationButton.on('click', function(e) {
@@ -49,14 +55,23 @@ $(document).ready(function() {
     if (!navigator.geolocation) return (
       Materialize.toast('Geolocation not supported by your browser', 3000, 'orange')
     );
+
+    locationButton.attr('disabled', 'disabled').text('Sending location...');
     
     navigator.geolocation.getCurrentPosition(function (position) {
+      locationButton.removeAttr('disabled').text('Send my location');
       socket.emit('createLocationMessage', {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
       });
     }, function () {
-      Materialize.toast('Unable to fetch location', 3000, 'yellow darken-3')
+      locationButton.removeAttr('disabled').text('Send my location');
+      Materialize.toast('Unable to fetch location', 3000, 'yellow darken-3');
     });
   });
+
+  $('#messageArea').on('keypress', function(e) {
+    if (e.which === 13) startSendMessage(e);
+  });
+
 });

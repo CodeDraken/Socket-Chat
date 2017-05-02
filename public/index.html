@@ -3,47 +3,48 @@
   <head>
     <title>Socket Chat</title>
     <meta charset="UTF-8">
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--Import materialize.css-->
-      <<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
-
+    <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
-  <body>
-
-    <div class="container">
-      <h1 class="center-align">Socket Chat</h1>
-
-      <div class="row">
-        <div class="col s12">
-          <ul class="collection" id="messages">
-            
-          </ul>
-        </div>
+  <body class="chat">
+    <div class="row">
+      <div class="chat__sidebar blue col s2">
+        <h5 class="sidebar__title">People</h5>
+        <div id="users"></div>
       </div>
+      
+      <div class="col s10 chat__main">
+        <ul class="collection chat__messages" id="messages"></ul>
+        <form class="chat__form" id="message-form">
+          <!--<div class="input-field">-->
+            <textarea id="messageArea" class="materialize-textarea" name="message" placeholder="message" autofocus autocomplete="off"></textarea>
+          <!--</div>-->
 
-      <div class="row">
+          <div class="chat__buttons">
+            <button id="send-location" class="btn waves-effect waves-light light-blue"><i class="material-icons">my_location</i>
+              Send My Location
+            </button>
+            <button type="submit" class="btn waves-effect waves-light">
+              <i class="material-icons">send</i>
+              Send Message
+            </button>
+            
+          </div>
 
-        <form id="message-form" class="col s12">
-          <div class="row ">
 
-            <div class="input-field col s12 m8">
-              <label for="message">Message</label>
-              <textarea class="materialize-textarea" name="message" placeholder="message"></textarea>
-            </div>
-
-            <div class="col s12 m4">
-              <button type="submit" class="btn waves-effect waves-light">Send Message <i class="material-icons right">send</i></button>
-              <button id="send-location" class="btn waves-effect waves-light light-blue">Send My Location <i class="material-icons right">my_location</i></button>
-            </div>
           </div>
         </form>
-
-        
-
       </div>
     </div>
+
+      <div class="row">
+        
+      </div>
 
 
     <script src="/socket.io/socket.io.js"></script>
@@ -51,5 +52,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
     <script src="/js/index.js"></script>
   </body>
-
 </html>
