@@ -16,16 +16,47 @@ socket.on('newMessage', function ({owner, text, createdAt}) {
   $('#messages').append(li);
 });
 
+socket.on('newLocationMessage', function ({owner, url, createdAt}) {
+  var li = $('<li class="collection-item message"></li>');
+  var a = $('<a target="_blank">My current location</a>');
+
+  li.text(`${owner}: `);
+  a.attr('href', url);
+  li.append(a);
+  $('#messages').append(li);
+});
+
 function sendMessage(owner, text) {
   socket.emit('createMessage', {owner, text}, function(msg) {
     console.log('Got it', msg);
   });
 }
 
-$('#message-form').on('submit', function (e) {
-  e.preventDefault();
-  const msgInput = $('[name=message]');
+// jQuery things
+$(document).ready(function() {
 
-  sendMessage('User', msgInput.val());
-  msgInput[0].value = '';
+  $('#message-form').on('submit', function (e) {
+    e.preventDefault();
+    const msgInput = $('[name=message]');
+
+    sendMessage('User', msgInput.val());
+    msgInput[0].value = '';
+  });
+
+  var locationButton = $('#send-location');
+  locationButton.on('click', function(e) {
+    e.preventDefault();
+    if (!navigator.geolocation) return (
+      Materialize.toast('Geolocation not supported by your browser', 3000, 'orange')
+    );
+    
+    navigator.geolocation.getCurrentPosition(function (position) {
+      socket.emit('createLocationMessage', {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+    }, function () {
+      Materialize.toast('Unable to fetch location', 3000, 'yellow darken-3')
+    });
+  });
 });

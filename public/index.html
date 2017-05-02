@@ -26,18 +26,21 @@
       <div class="row">
 
         <form id="message-form" class="col s12">
-          <div class="row valign-wrapper">
+          <div class="row ">
 
-            <div class="input-field col s8">
+            <div class="input-field col s12 m8">
               <label for="message">Message</label>
               <textarea class="materialize-textarea" name="message" placeholder="message"></textarea>
             </div>
 
-            <div class="col s4">
-              <button class="right btn waves-effect waves-light">Send Message <i class="material-icons right">send</i></button>
+            <div class="col s12 m4">
+              <button type="submit" class="btn waves-effect waves-light">Send Message <i class="material-icons right">send</i></button>
+              <button id="send-location" class="btn waves-effect waves-light light-blue">Send My Location <i class="material-icons right">my_location</i></button>
             </div>
           </div>
         </form>
+
+        
 
       </div>
     </div>
