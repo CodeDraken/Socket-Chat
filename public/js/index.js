@@ -1,7 +1,7 @@
 var socket = io();
 
 socket.on('connect', function () {
-  sendMessage('Bob', 'Hello!');
+  
 });
 
 socket.on('disconnect', function () {
