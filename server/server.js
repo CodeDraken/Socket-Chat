@@ -4,6 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 const publicPath = path.join(__dirname, '../public');
+const tmpPath = path.join(__dirname, '../.tmp');
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -12,6 +13,7 @@ const {generateMessage, generateLocationMessage} = require('./utils/message');
 const port = process.env.PORT || 3000;
 
 // static file server
+app.use(express.static(tmpPath));
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {

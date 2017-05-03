@@ -38,7 +38,6 @@ function sendMessage(owner, text) {
 
 // jQuery things
 $(document).ready(function() {
-
   var startSendMessage = function (e) {
     e.preventDefault();
     const msgInput = $('[name=message]');
