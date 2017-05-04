@@ -9,14 +9,18 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function ({owner, text, createdAt}) {
-  var date = (new Date(createdAt)).toLocaleTimeString();
-  var li = $('<li class="collection-item chat__message"></li>');
-  var timestamp = '<span class="secondary-content message__date">' + date + '</span>';
-  var ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
-  var message = '<p>' + text + '</p>';
+  var template = $('#message-template').html();
+  var html = Mustache.render(template);
+
+  $('#messages').append(html);
+  // var date = (new Date(createdAt)).toLocaleTimeString();
+  // var li = $('<li class="collection-item chat__message"></li>');
+  // var timestamp = '<span class="secondary-content message__date">' + date + '</span>';
+  // var ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
+  // var message = '<p>' + text + '</p>';
   
-  li.append(ownerAndStamp).append(message);
-  $('#messages').append(li);
+  // li.append(ownerAndStamp).append(message);
+  // $('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function ({owner, url, createdAt}) {

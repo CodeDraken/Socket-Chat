@@ -28,7 +28,7 @@ gulp.task('scripts', () => {
     // .pipe(refresh());
 });
 
-gulp.task('html', ['styles', 'scripts', 'mustache'], () => {
+gulp.task('html', ['styles', 'scripts', 'template-engine'], () => {
   return gulp.src('.tmp/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'src', '.']}))
     .pipe($.if(/\.js$/, $.uglify()))
@@ -62,24 +62,30 @@ gulp.task('browser-sync', () => {
   });
 });
 
-gulp.task('mustache', () => {
-  gulp.src('src/mustache/**/*.mustache')
+// gulp.task('mustache', () => {
+//   gulp.src('src/mustache/**/*.mustache')
+//     .pipe($.plumber())
+//     .pipe($.mustache('src/mustache/data.json', {extension: '.html'}, {
+//       // partials
+//     }))
+//     .pipe(gulp.dest('.tmp'));
+// });
+
+gulp.task('template-engine', () => {
+  gulp.src('src/html/**/*.html')
     .pipe($.plumber())
-    .pipe($.mustache('src/mustache/data.json', {extension: '.html'}, {
-      // partials
-    }))
     .pipe(gulp.dest('.tmp'));
 });
 
 gulp.task('serve', () => {
-  runSequence(['clean'], ['mustache','styles', 'scripts'], ['browser-sync'], () => {
+  runSequence(['clean'], ['template-engine','styles', 'scripts'], ['browser-sync'], () => {
     // refresh.listen();
 
     gulp.watch([
       'src/images/**/*'
     ]).on('change', browserSync.reload);
 
-    gulp.watch('src/mustache/**/*.mustache', ['mustache']);
+    gulp.watch('src/html/**/*.html', ['template-engine']);
     gulp.watch('src/styles/**/*.scss', ['styles']);
     gulp.watch('src/scripts/**/*.js', ['scripts']);
   });
