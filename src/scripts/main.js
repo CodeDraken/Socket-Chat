@@ -1,4 +1,20 @@
-var socket = io();
+const socket = io();
+
+const scrollToBottom = () => {
+  // Selectors
+  const messages = $('#messages'),
+        newMessage = messages.children('li:last-child');
+  // Heights
+  const clientHeight = messages.prop('clientHeight'),
+        newMessageHeight = newMessage.innerHeight(),
+        lastMessageHeight = newMessage.prev().innerHeight(),
+        scrollTop = messages.prop('scrollTop'),
+        scrollHeight = messages.prop('scrollHeight');
+
+  if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    messages.scrollTop(scrollHeight);
+  }
+};
 
 socket.on('connect', function () {
   
@@ -9,31 +25,29 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function ({owner, text, createdAt}) {
-  var template = $('#message-template').html();
-  var html = Mustache.render(template);
-
-  $('#messages').append(html);
-  // var date = (new Date(createdAt)).toLocaleTimeString();
-  // var li = $('<li class="collection-item chat__message"></li>');
-  // var timestamp = '<span class="secondary-content message__date">' + date + '</span>';
-  // var ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
-  // var message = '<p>' + text + '</p>';
+  const date = (new Date(createdAt)).toLocaleTimeString();
+  const li = $('<li class="collection-item chat__message"></li>');
+  const timestamp = '<span class="secondary-content message__date">' + date + '</span>';
+  const ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
+  const message = '<p>' + text + '</p>';
   
-  // li.append(ownerAndStamp).append(message);
-  // $('#messages').append(li);
+  li.append(ownerAndStamp).append(message);
+  $('#messages').append(li);
+  scrollToBottom();
 });
 
 socket.on('newLocationMessage', function ({owner, url, createdAt}) {
   // timestamp formatted as: hh:mm:ss AM/PM
-  var date = (new Date(createdAt)).toLocaleTimeString();
-  var li = $('<li class="collection-item chat__message"></li>');
-  var timestamp = '<span class="secondary-content message__date">' + date + '</span>';
-  var ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
-  var a = $('<a target="_blank">My current location</a>');
+  const date = (new Date(createdAt)).toLocaleTimeString();
+  const li = $('<li class="collection-item chat__message"></li>');
+  const timestamp = '<span class="secondary-content message__date">' + date + '</span>';
+  const ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
+  const a = $('<a target="_blank">My current location</a>');
 
   a.attr('href', url);
   li.append(ownerAndStamp).append(a);
   $('#messages').append(li);
+  scrollToBottom();
 });
 
 function sendMessage(owner, text) {
@@ -43,7 +57,7 @@ function sendMessage(owner, text) {
 
 // jQuery things
 $(document).ready(function() {
-  var startSendMessage = function (e) {
+  const startSendMessage = function (e) {
     e.preventDefault();
     const msgInput = $('[name=message]');
 
@@ -53,7 +67,7 @@ $(document).ready(function() {
 
   $('#message-form').on('submit', startSendMessage);
 
-  var locationButton = $('#send-location');
+  const locationButton = $('#send-location');
   locationButton.on('click', function(e) {
     e.preventDefault();
     if (!navigator.geolocation) return (
