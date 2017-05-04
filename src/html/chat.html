@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Socket-Chat</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body class="chat">
+    <div class="row">
+      <div class="chat__sidebar blue col s2">
+        <h5 class="sidebar__title">People</h5>
+        <div id="users"></div>
+      </div>
+      
+      <div class="col s10 chat__main">
+        <ul class="collection chat__messages" id="messages"></ul>
+        <form class="chat__form" id="message-form">
+          <!--<div class="input-field">-->
+            <textarea id="messageArea" class="materialize-textarea" name="message" placeholder="message" autofocus autocomplete="off"></textarea>
+          <!--</div>-->
+
+          <div class="chat__buttons">
+            <button id="send-location" class="btn waves-effect waves-light light-blue"><i class="material-icons">my_location</i>
+              Send My Location
+            </button>
+            <button type="submit" class="btn waves-effect waves-light">
+              <i class="material-icons">send</i>
+              Send Message
+            </button>
+            
+          </div>
+
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+      <div class="row">
+        
+      </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/chat.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>
