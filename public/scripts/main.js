@@ -20,6 +20,7 @@ socket.on('newMessage', function ({owner, text, createdAt}) {
 });
 
 socket.on('newLocationMessage', function ({owner, url, createdAt}) {
+  // timestamp formatted as: hh:mm:ss AM/PM
   var date = (new Date(createdAt)).toLocaleTimeString();
   var li = $('<li class="collection-item chat__message"></li>');
   var timestamp = '<span class="secondary-content message__date">' + date + '</span>';

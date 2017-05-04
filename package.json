@@ -2,6 +2,8 @@
   "scripts": {
     "start": "node server/server.js",
     "start-watch": "nodemon server/server.js",
+    "front-end": "gulp serve",
+    "build": "gulp",
     "test": "mocha server/**/*.test.js",
     "test-watch": "nodemon yarn test"
   },
@@ -35,7 +37,6 @@
     "gulp-imagemin": "^3.2.0",
     "gulp-load-plugins": "^1.5.0",
     "gulp-plumber": "^1.1.0",
-    "gulp-refresh": "^1.1.0",
     "gulp-sass": "^3.1.0",
     "gulp-size": "^2.1.0",
     "gulp-uglify": "^2.1.2",

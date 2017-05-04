@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const gulpLoadPlugins = require('gulp-load-plugins');
-const browserSync = require('browser-sync').create();
+const browserSync = require('browser-sync');
 const del = require('del');
 const runSequence = require('run-sequence');
 
@@ -54,14 +54,22 @@ gulp.task('images', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
+gulp.task('browser-sync', () => {
+  browserSync.init({
+    proxy: 'localhost:3000',
+    files: ['public/**/*.*'],
+    browser: 'google chrome'
+  });
+});
+
 gulp.task('serve', () => {
-  runSequence(['clean'], ['styles', 'scripts'], () => {
+  runSequence(['clean'], ['styles', 'scripts'], ['browser-sync'], () => {
     // refresh.listen();
 
     gulp.watch([
       'public/*.html',
       'public/images/**/*'
-      ]); //.on('change', refresh);
+    ]); //.on('change', refresh);
 
     gulp.watch('public/styles/**/*.scss', ['styles']);
     gulp.watch('public/scripts/**/*.js', ['scripts']);
@@ -69,11 +77,11 @@ gulp.task('serve', () => {
 });
 
 gulp.task('serve:dist', ['default'], () => {
-  refresh.listen();
+  // refresh.listen();
 });
 
 gulp.task('build', ['html', 'images'], () => {
-  return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}))
+  return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
 gulp.task('default', function() {
