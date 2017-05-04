@@ -8,7 +8,7 @@ const $ = gulpLoadPlugins();
 // const refresh = $.refresh;
 
 gulp.task('styles', () => {
-  return gulp.src('public/styles/*.scss')
+  return gulp.src('src/styles/*.scss')
     .pipe($.plumber())
     .pipe($.sass.sync({
       outputStyle: 'expanded',
@@ -21,16 +21,16 @@ gulp.task('styles', () => {
 });
 
 gulp.task('scripts', () => {
-  return gulp.src('public/scripts/**/*.js')
+  return gulp.src('src/scripts/**/*.js')
     .pipe($.plumber())
     .pipe($.babel({presets: ['es2015']}))
     .pipe(gulp.dest('.tmp/scripts'));
     // .pipe(refresh());
 });
 
-gulp.task('html', ['styles', 'scripts'], () => {
-  return gulp.src('public/*.html')
-    .pipe($.useref({searchPath: ['.tmp', 'public', '.']}))
+gulp.task('html', ['styles', 'scripts', 'mustache'], () => {
+  return gulp.src('.tmp/*.html')
+    .pipe($.useref({searchPath: ['.tmp', 'src', '.']}))
     .pipe($.if(/\.js$/, $.uglify()))
     .pipe($.if(/\.css$/, $.cssnano({safe: true, autoprefixer: false})))
     .pipe($.if(/\.html$/, $.htmlmin({
@@ -43,45 +43,54 @@ gulp.task('html', ['styles', 'scripts'], () => {
       removeScriptTypeAttributes: true,
       removeStyleLinkTypeAttributes: true
     })))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('public'));
 });
 
 gulp.task('images', () => {
-  return gulp.src('public/images/**/*')
+  return gulp.src('src/images/**/*')
     .pipe($.imagemin())
-    .pipe(gulp.dest('dist/images'));
+    .pipe(gulp.dest('public/images'));
 });
 
-gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
+gulp.task('clean', del.bind(null, ['.tmp', 'public']));
 
 gulp.task('browser-sync', () => {
   browserSync.init({
     proxy: 'localhost:3000',
-    files: ['public/**/*.*'],
+    files: ['.tmp/**/*.*'],
     browser: 'google chrome'
   });
 });
 
+gulp.task('mustache', () => {
+  gulp.src('src/mustache/**/*.mustache')
+    .pipe($.plumber())
+    .pipe($.mustache('src/mustache/data.json', {extension: '.html'}, {
+      // partials
+    }))
+    .pipe(gulp.dest('.tmp'));
+});
+
 gulp.task('serve', () => {
-  runSequence(['clean'], ['styles', 'scripts'], ['browser-sync'], () => {
+  runSequence(['clean'], ['mustache','styles', 'scripts'], ['browser-sync'], () => {
     // refresh.listen();
 
     gulp.watch([
-      'public/*.html',
-      'public/images/**/*'
-    ]); //.on('change', refresh);
+      'src/images/**/*'
+    ]).on('change', browserSync.reload);
 
-    gulp.watch('public/styles/**/*.scss', ['styles']);
-    gulp.watch('public/scripts/**/*.js', ['scripts']);
+    gulp.watch('src/mustache/**/*.mustache', ['mustache']);
+    gulp.watch('src/styles/**/*.scss', ['styles']);
+    gulp.watch('src/scripts/**/*.js', ['scripts']);
   });
 });
 
-gulp.task('serve:dist', ['default'], () => {
+gulp.task('serve:public', ['default'], () => {
   // refresh.listen();
 });
 
 gulp.task('build', ['html', 'images'], () => {
-  return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
+  return gulp.src('public/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
 gulp.task('default', function() {
