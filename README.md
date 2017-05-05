@@ -1,6 +1,8 @@
 # Socket-Chat
 A Socket.io chat application
 
+View / Use it on Heroku: https://morning-stream-44740.herokuapp.com/
+
 ## Using the source
 
 yarn start // starts the server port 3000
