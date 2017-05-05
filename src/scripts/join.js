@@ -19,6 +19,10 @@ $(document).ready(function() {
     return reserved.indexOf(name.toLowerCase()) !== -1;
   };
 
+  const isNameTooLong = (name) => {
+    return name.length > 12;
+  };
+
   $('#join').submit((evt) => {
     const name = $('#join [name=name]').val();
     const room = $('#join [name=room]').val();
@@ -33,8 +37,25 @@ $(document).ready(function() {
       return evt.preventDefault();
     }
 
+    if (isNameTooLong(name)) {
+      Materialize.toast('Name is too long! (12 characters max)', 3000, 'yellow darken-3');
+      return evt.preventDefault();
+    }
+
     localStorage.setItem('login', JSON.stringify({name, room}));
   });
 
+  $('#autocomplete_room').autocomplete({
+    data: {
+      "FreeCodeCamp": null,
+      "General": null,
+      "Chat_Testing": null
+    },
+    limit: 5, // The max amount of results that can be shown at once. Default: Infinity.
+    onAutocomplete: function(val) {
+      // Callback function when value is autcompleted.
+    },
+    minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
+  });
 
 });

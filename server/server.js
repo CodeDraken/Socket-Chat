@@ -3,16 +3,20 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
 const {generateMessage, generateLocationMessage} = require('./utils/message');
-const {isRealString, isNameReserved} = require('./utils/validation');
+const {isRealString, isNameReserved, isNameTooLong} = require('./utils/validation');
+const {Users} = require('./utils/users');
 
 const srcPath = path.join(__dirname, '../src');
 const publicPath = path.join(__dirname, '../public');
 const tmpPath = path.join(__dirname, '../.tmp');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 const port = process.env.PORT || 3000;
+const users = new Users();
+
 
 // static file server
 app.use(express.static(publicPath)); // minified build
@@ -23,7 +27,12 @@ io.on('connection', (socket) => {
   //console.log('User connected');
 
   socket.on('disconnect', () => {
-    //console.log('User disconnected');
+    const user = users.removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+      io.to(user.room).emit('newMessage', generateMessage('SocketBot', `<em>${user.name} has left the room</em>`));
+    }
   });
 
   socket.on('createMessage', ({owner, text}, callback) => {
@@ -46,11 +55,20 @@ io.on('connection', (socket) => {
     
     if (isNameReserved(name))
       return callback('Name is in use!');
+    
+    if (isNameTooLong(name))
+      return callback('Name is too long!');
 
     socket.join(room);
+    users.removeUser(socket.id);
+    users.addUser(socket.id, name, room);
 
-    socket.emit('newMessage', generateMessage('SocketBot', `<em>Welcome to the chat ${name}! You're currently in: ${room}</em>`));
+    io.to(room).emit('updateUserList', users.getUserList(room));
+
+    socket.emit('newMessage', generateMessage('SocketBot', `<em>Welcome to the chat ${name}! You're currently in: <strong>${room}</strong></em>`));
+
     socket.broadcast.to(room).emit('newMessage', generateMessage('SocketBot', `<em>${name} has joined the chatroom</em>`));
+
     callback();
   });
 

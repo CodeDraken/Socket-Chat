@@ -33,6 +33,15 @@ socket.on('disconnect', function () {
   console.log('Disconnected from server');
 });
 
+socket.on('updateUserList', (users) => {
+  const usersList = $('<div class="collection"></div>');
+  console.log('updating users', users)
+  users.forEach(user => {
+    usersList.append(`<a href="#" class="collection-item">${user}</a>`);
+  });
+  $('#users').html(usersList);
+});
+
 socket.on('newMessage', function ({owner, text, createdAt}) {
   const specialColor = owner === 'SocketBot' ? 'blue-text text-darken-1' : '';
   const date = (new Date(createdAt)).toLocaleTimeString();

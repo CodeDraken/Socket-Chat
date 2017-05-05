@@ -7,4 +7,8 @@ const isNameReserved = (name) => {
   return reserved.indexOf(name.toLowerCase()) !== -1;
 };
 
-module.exports = {isRealString, isNameReserved};
+const isNameTooLong = (name) => {
+  return name.length > 12;
+};
+
+module.exports = {isRealString, isNameReserved, isNameTooLong};
