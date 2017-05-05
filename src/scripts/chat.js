@@ -72,9 +72,17 @@ socket.on('newLocationMessage', function ({owner, url, createdAt}) {
   scrollToBottom();
 });
 
-function sendMessage(owner, text) {
-  socket.emit('createMessage', {owner, text}, function() {
-  });
+function sendMessage(text) {
+  if (text) {
+    console.log('global?', (text.indexOf('/global') === 0))
+    if (text.indexOf('/global') === 0) {
+      socket.emit('createGlobalMessage', {
+        text: `<span class="green-text text-darken-4">[Global]</span>${text.replace('/global', '')}`
+      }, function() {});
+    } else {
+      socket.emit('createMessage', {text}, function() {});
+    }
+  }
 }
 
 // jQuery things
@@ -83,7 +91,7 @@ $(document).ready(function() {
     e.preventDefault();
     const msgInput = $('[name=message]');
 
-    sendMessage('User', msgInput.val());
+    sendMessage(msgInput.val());
     msgInput[0].value = '';
   };
 

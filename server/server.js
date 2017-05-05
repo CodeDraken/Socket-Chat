@@ -35,18 +35,33 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('createMessage', ({owner, text}, callback) => {
-    io.emit('newMessage', generateMessage(owner, text));
+  socket.on('createMessage', ({text}, callback) => {
+    const user = users.getUser(socket.id);
+
+    if (user && isRealString(text)) {
+      io.to(user.room).emit('newMessage', generateMessage(user.name, text));
+    }
+    
     callback();
   });
 
-  // socket.on('createGlobalMessage', ({owner, text}, callback) => {
-  //   io.emit('newGlobalMessage', generateMessage(owner, text));
-  //   callback();
-  // });
+  socket.on('createGlobalMessage', ({text}, callback) => {
+    const user = users.getUser(socket.id);
+
+    if (user && isRealString(text)) {
+      io.emit('newMessage', generateMessage(user.name, text));
+    }
+    
+    callback();
+  });
 
   socket.on('createLocationMessage', ({latitude, longitude}) => {
-    io.emit('newLocationMessage', generateLocationMessage('SocketBot', latitude, longitude));
+    const user = users.getUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, latitude, longitude));
+    }
+    
   });
 
   socket.on('join', ({name, room}, callback) => {
