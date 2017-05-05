@@ -7,6 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString, isNameReserved} = require('./utils/validation');
 
 const srcPath = path.join(__dirname, '../src');
 const publicPath = path.join(__dirname, '../public');
@@ -19,23 +20,38 @@ app.use(express.static(tmpPath)); // development
 app.use(express.static(srcPath)); // for images during development
 
 io.on('connection', (socket) => {
-  console.log('User connected');
+  //console.log('User connected');
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    //console.log('User disconnected');
   });
-
-  socket.emit('newMessage', generateMessage('SocketBot', `Welcome to the chat app user`));
-
-  socket.broadcast.emit('newMessage', generateMessage('SocketBot', `User has joined the chatroom`));
 
   socket.on('createMessage', ({owner, text}, callback) => {
     io.emit('newMessage', generateMessage(owner, text));
-    callback('This is from server');
+    callback();
   });
+
+  // socket.on('createGlobalMessage', ({owner, text}, callback) => {
+  //   io.emit('newGlobalMessage', generateMessage(owner, text));
+  //   callback();
+  // });
 
   socket.on('createLocationMessage', ({latitude, longitude}) => {
     io.emit('newLocationMessage', generateLocationMessage('SocketBot', latitude, longitude));
+  });
+
+  socket.on('join', ({name, room}, callback) => {
+    if (!isRealString(name) || !isRealString(room))
+      return callback('Name and room name are required!');
+    
+    if (isNameReserved(name))
+      return callback('Name is in use!');
+
+    socket.join(room);
+
+    socket.emit('newMessage', generateMessage('SocketBot', `<em>Welcome to the chat ${name}! You're currently in: ${room}</em>`));
+    socket.broadcast.to(room).emit('newMessage', generateMessage('SocketBot', `<em>${name} has joined the chatroom</em>`));
+    callback();
   });
 
 });

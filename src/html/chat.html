@@ -17,12 +17,12 @@
   </head>
   <body class="chat">
     <div class="row">
-      <div class="chat__sidebar blue col s2">
+      <div class="chat__sidebar blue col s2 xl1">
         <h5 class="sidebar__title">People</h5>
         <div id="users"></div>
       </div>
       
-      <div class="col s10 chat__main">
+      <div class="col s12 m10 xl11 chat__main">
         <ul class="collection chat__messages" id="messages"></ul>
         <form class="chat__form" id="message-form">
           <!--<div class="input-field">-->
@@ -53,6 +53,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <script src="scripts/libs/deparam.js"></script>
     <!-- build:js scripts/main.js -->
     <script src="scripts/chat.js"></script>
     <!-- endbuild -->

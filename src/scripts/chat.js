@@ -17,7 +17,16 @@ const scrollToBottom = () => {
 };
 
 socket.on('connect', function () {
-  
+  // {name, room}
+  const params = $.deparam(window.location.search);
+  socket.emit('join', params, (err) => {
+    if (err) {
+      alert(err);
+      window.location.href = '/';
+    } else {
+
+    }
+  });
 });
 
 socket.on('disconnect', function () {
@@ -25,23 +34,27 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function ({owner, text, createdAt}) {
+  const specialColor = owner === 'SocketBot' ? 'blue-text text-darken-1' : '';
   const date = (new Date(createdAt)).toLocaleTimeString();
   const li = $('<li class="collection-item chat__message"></li>');
-  const timestamp = '<span class="secondary-content message__date">' + date + '</span>';
-  const ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
-  const message = '<p>' + text + '</p>';
+  const timestamp = `<span class="secondary-content message__date">${date}</span>`;
+  const ownerAndStamp = `<p><strong class="${specialColor}">${owner} : </strong>${timestamp}</p>`;
+  const message = `<p>${text}</p>`;
   
   li.append(ownerAndStamp).append(message);
   $('#messages').append(li);
   scrollToBottom();
 });
 
+// TODO merge newLocationMessage & newMessage into one function
+
 socket.on('newLocationMessage', function ({owner, url, createdAt}) {
+  const specialColor = owner === 'SocketBot' ? 'blue-text text-darken-1' : '';
   // timestamp formatted as: hh:mm:ss AM/PM
   const date = (new Date(createdAt)).toLocaleTimeString();
   const li = $('<li class="collection-item chat__message"></li>');
-  const timestamp = '<span class="secondary-content message__date">' + date + '</span>';
-  const ownerAndStamp = '<p><strong>' + owner + ': </strong>' + timestamp + '</p>';
+  const timestamp = `<span class="secondary-content message__date">${date}</span>`;
+  const ownerAndStamp = `<p><strong class="${specialColor}">${owner} : </strong>${timestamp}</p>`;
   const a = $('<a target="_blank">My current location</a>');
 
   a.attr('href', url);

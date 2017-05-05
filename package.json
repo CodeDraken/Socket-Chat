@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "node server/server.js",
-    "start-watch": "nodemon server/server.js",
+    "start-watch": "nodemon --watch server server/server.js",
     "front-end": "gulp serve",
     "build": "gulp",
     "test": "mocha server/**/*.test.js",

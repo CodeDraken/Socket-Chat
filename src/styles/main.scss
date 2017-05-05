@@ -44,6 +44,9 @@ textarea {
 .chat__sidebar {
   overflow-y: scroll;
   height: 100vh;
+  @media (max-width: 600px) {
+    display: none;
+  }
 }
 
 .sidebar__title {
@@ -52,9 +55,16 @@ textarea {
 }
 
 .chat__messages {
-  height: 85%;
+  height: 80%;
   overflow-y: scroll;
+  margin: 0;
   -webkit-overflow-scrolling: touch;
+  @media (max-height: 500px) {
+    height: 70%;
+  }
+  @media (max-height: 300px) {
+    height: 50%;
+  }
 }
 
 .chat__message {
@@ -63,18 +73,26 @@ textarea {
 }
 
 .chat__form {
-  height: 10%;
+  height: 20%;
   display: flex;
   justify-content: space-around;
   align-items: center;
   align-content: space-around;
+  overflow-y: hidden;
+  @media (max-height: 500px) {
+    height: 30%;
+  }
+  @media (max-height: 300px) {
+    height: 50%;
+  }
 }
 
 .chat__form textarea {
   height: 100%;
- // height: 5rem !important;
+  max-height: 100%;
   overflow-y: scroll !important;
   flex-basis: 80%;
+  padding: 0;
 }
 
 .chat__form textarea::-webkit-scrollbar { 
