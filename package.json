@@ -8,7 +8,7 @@
     "test-watch": "nodemon yarn test"
   },
   "engines": {
-    "node": "6.10.2"
+    "node": "6.11.1"
   },
   "name": "socket-chat",
   "version": "1.0.0",
